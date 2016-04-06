@@ -1,6 +1,5 @@
 var express = require('express');
 var app = express();
-var fs = require('fs');
 var bodyParser = require('body-parser');
 var tictactoe = require('./tictactoe.js');
 // Put these statements before you define any routes.
