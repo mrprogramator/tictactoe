@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="resources/bootstrap-3.3.5-dist/css/bootstrap.css" rel="stylesheet">
+    <link href="resources/css/style.css" rel="stylesheet">
+</head>
+<body>
+<div id="logs" class="alert alert-info hidden" style="font-size:30px;position:fixed;top:0;width:100%;z-index=1;height:60px">
+    </div>
+  <div class="container" style="max-width:800px;margin:60px auto">
+    <h1 class="page-header">Tic tac toe
+    <small>
+        <a class="btn btn-lg btn-info pull-right" onclick="window.location.reload()">Play again</a>
+    </small>
+    </h1>
+    
+    <div class="tictactoe-table" style="max-width:500px;margin:20px auto">
+          <div class="row">
+            <a class="btn btn-default btn-tictactoe col-xs-4" onclick="play(0)">
+            </a>
+            <a class="btn btn-default btn-tictactoe col-xs-4" onclick="play(1)">
+            </a>
+            <a class="btn btn-default btn-tictactoe col-xs-4" onclick="play(2)">
+            </a>
+          </div>
+          <div class="row">
+            <a class="btn btn-default btn-tictactoe col-xs-4" onclick="play(3)">
+            </a>
+            <a class="btn btn-default btn-tictactoe col-xs-4" onclick="play(4)">
+            </a>
+            <a class="btn btn-default btn-tictactoe col-xs-4" onclick="play(5)">
+            </a>
+          </div>
+          <div class="row">
+            <a class="btn btn-default btn-tictactoe col-xs-4" onclick="play(6)">
+            </a>
+            <a class="btn btn-default btn-tictactoe col-xs-4" onclick="play(7)">
+            </a>
+            <a class="btn btn-default btn-tictactoe col-xs-4 disable" onclick="play(8)">
+            </a>
+          </div>
+    </div>
+  </div>
+  <div class="page-footer" >
+    <footer>
+      <p>Desarrollado por Luis Alberto Saucedo Quiroga</p>
+      <p><strong>Email:</strong>luisaucedoquiroga@gmail.com</p>
+      <p><strong>Tel:</strong>(+591) 78545415</p>
+      <p>Copyleft <span class="glyphicon glyphicon-copyright-mark"></span> Santa Cruz, Bolivia 2016</p>
+    </footer>
+    
+  </div>
+<script>
+    table = [];
+    loading = false;
+    function printTable(table) {
+        var i =0;
+        table.forEach(function (pos){
+            if (pos === 5){
+              printY(i);
+            }
+            if (pos === 4){
+              printX(i);
+            }
+            ++i;
+        })
+    }
+  
+    function printX(position){
+        var btn = document.getElementsByClassName('btn-tictactoe')[position];
+        btn.className+=' disabled';
+        btn.innerHTML = "<span class=\"glyphicon glyphicon-remove\" style=\"font-size:50px;margin-top:40px\"></span>";
+    }
+  
+    function printY(position) {
+        var btn = document.getElementsByClassName('btn-tictactoe')[position];
+        btn.className+=' disabled';
+        btn.innerHTML = "<span class=\"glyphicon glyphicon-record\" style=\"font-size:50px;margin-top:40px\"></span>";
+    }
+  
+    function play(position) {
+        if (loading){
+            return;
+        }
+        printX(position);
+        
+        callAjax('/play',{
+            player:0,
+             position: position,
+             singlePlayer:true,
+             noPlayer: false,
+             table: table
+           },function (response){
+                loading = false;
+                response = JSON.parse(response);
+                table = response.table;
+
+                console.log(response.table, response.gameState);
+                printTable(table);
+                var gameState = response.gameState;
+
+                if (gameState.status != 2) {
+                    disableTable();
+                    document
+                    .getElementById('logs')
+                    .className = document
+                    .getElementById('logs')
+                    .className
+                    .replace(/\bhidden\b/,'');
+                }
+
+                if (gameState.status == 1) {
+
+                    if (gameState.player == 5){
+                        document.getElementById('logs').innerHTML = 
+                        "<span class=\"glyphicon glyphicon-record\" style=\"margin-right:10px\"></span> WINS";
+                    }
+
+                    if (gameState.player == 4){
+                        document.getElementById('logs').innerHTML = 
+                        "<span class=\"glyphicon glyphicon-remove\" style=\"margin-right:10px\"></span> WINS";
+                    }
+
+                }
+                else if (gameState.status == 0) {
+                    document.getElementById('logs').innerHTML = 
+                    "<span class=\"glyphicon glyphicon-info-sign\" style=\"margin-right:10px\"></span>TIGHT"
+                }
+        });
+    }
+  
+  
+    function disableTable(){
+        var btns = document.getElementsByClassName('btn-tictactoe');
+
+        for(var i=0; i< btns.length; ++i){
+            btns[i].className+=" disabled";
+        }
+    }
+  
+    function callAjax(url, parameters, callback){
+        var xmlhttp;
+        // compatible with IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function(){
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+              callback(xmlhttp.responseText);
+            }
+        }
+        xmlhttp.open("POST", url, true);
+        xmlhttp.send(JSON.stringify(parameters));
+    }
+</script>
+</body>
+</html>
