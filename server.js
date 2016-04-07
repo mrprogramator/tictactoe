@@ -21,6 +21,5 @@ app.post('/play', function (req, res) {
     parameters.singlePlayer,
     parameters.noPlayer,
     parameters.table);
-  
-  res.send(response);
+    res.send(response);
 });

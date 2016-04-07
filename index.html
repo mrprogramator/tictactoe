@@ -7,6 +7,10 @@
 <body>
 <div id="logs" class="alert alert-info hidden" style="font-size:30px;position:fixed;top:0;width:100%;z-index=1;height:60px">
     </div>
+<div id="loading-sign" class="text-center hidden" style="font-size:30px;position:fixed;top:0;width:100%;z-index=1;height:60px">
+    <img src="resources/img/loading_spinner.gif" style="height:80px; margin:0px"/>
+    Thinking....
+</div>
   <div class="container" style="max-width:800px;margin:60px auto">
     <h1 class="page-header">Tic tac toe
     <small>
@@ -82,8 +86,16 @@
         if (loading){
             return;
         }
-        printX(position);
+        loading = true;
+        document
+        .getElementById('loading-sign')
+        .className =
+        document
+        .getElementById('loading-sign')
+        .className
+        .replace(/\bhidden\b/,'');
         
+        printX(position);
         callAjax('/play',{
             player:0,
              position: position,
@@ -94,7 +106,11 @@
                 loading = false;
                 response = JSON.parse(response);
                 table = response.table;
-
+                
+                document
+                .getElementById('loading-sign')
+                .className += " hidden"
+                
                 console.log(response.table, response.gameState);
                 printTable(table);
                 var gameState = response.gameState;
