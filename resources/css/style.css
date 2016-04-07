@@ -4,11 +4,19 @@
       width:150px;
       height:150px;
     }
+    .btn-tictactoe span.glyphicon{
+      font-size:50px;
+      margin-top:40px
+    }
 }
 @media screen and (max-width: 480px) {
     .btn-tictactoe{
       width:100px;
       height:100px;
+    }
+    .btn-tictactoe span.glyphicon{
+      font-size:50px;
+      margin-top:20px
     }
 }
 
