@@ -1,7 +1,17 @@
-.btn-tictactoe{
-  width:150px;
-  height:150px;
+
+@media screen and (min-width: 480px) {
+    .btn-tictactoe{
+      width:150px;
+      height:150px;
+    }
 }
+@media screen and (max-width: 480px) {
+    .btn-tictactoe{
+      width:100px;
+      height:100px;
+    }
+}
+
 .page-footer
 {
     position: relative;
