@@ -373,7 +373,6 @@ function perfectMoveChoose(table, player) {
     // From this point, we have: # empty table cells >= 1
     var nextPlayer = getNextPlayer(player);
     var moveResults = [];
-    var nEmptyCells = 0;
 
     for (var i = 0; i < table.length; ++i) {
       if (table[i] != EMPTY) continue; // cell is not empty
