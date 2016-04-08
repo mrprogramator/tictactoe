@@ -194,6 +194,8 @@ apiPlayGame = function (player, position, singlePlayer, noPlayer, table){
 
 
 function chooseMove(table, player){
+    return perfectMoveChoose(table, player)['move'];
+
     var tree = fillTree(table, player);
     
     tree.forEach(function (branch){
@@ -345,4 +347,50 @@ function fillTree(table, player, level, tree) {
     }
     
     return tree;
+}
+
+PLAYER_RESULT = {
+  WON : 0,
+  TIED : 1,
+  LOST : 2
+};
+
+function perfectMoveChoose(table, player) {
+    var gstate = getGameState(table);
+    if (gstate['status'] === STATES['WINNER']) {
+      return {
+        result: gstate['player'] === player ? PLAYER_RESULT['WON'] : PLAYER_RESULT['LOST'],
+        move: undefined
+      };
+    }
+    if (gstate['status'] === STATES['TIGHT']) {
+      return {
+        result: PLAYER_RESULT['TIED'],
+        move: undefined
+      };
+    }
+
+    // From this point, we have: # empty table cells >= 1
+    var nextPlayer = getNextPlayer(player);
+    var moveResults = [];
+    var nEmptyCells = 0;
+
+    for (var i = 0; i < table.length; ++i) {
+      if (table[i] != EMPTY) continue; // cell is not empty
+
+      table[i] = player;
+      var res = perfectMoveChoose(table, nextPlayer);
+      table[i] = EMPTY;
+
+      var playerRes = {
+        result : 2 - res['result'],
+        move : i
+      };
+      moveResults.push(playerRes);
+    }
+
+    moveResults.sort(function(a, b) { return a['result'] - b['result']; });
+    var bestResult = moveResults[0];
+
+    return bestResult;
 }
